@@ -1,11 +1,11 @@
 module AbvEquations
 
-let Abv og fg = (og - fg) * 131.25
+let Abv og fg : decimal = (og - fg) * 131.25m
 
-let AlternateAbv og fg = (76.08 * (og - fg) / (1.775 - og)) * (fg / 0.794)
+let AlternateAbv og fg : decimal = (76.08m * (og - fg) / (1.775m - og)) * (fg / 0.794m)
 
-let calFromAlcohol og fg = 1881.22 * fg * (og - fg)/(1.775-og)
+let CalFromAlcohol og fg : decimal = 1881.22m * fg * (og - fg)/(1.775m - og)
 
-let calFromCarbs og fg = 3550.0 * fg * ((0.1808 * og) + (0.819 * fg) - 1.0004)
+let CalFromCarbs og fg : decimal = 3550.0m * fg * ((0.1808m * og) + (0.819m * fg) - 1.0004m)
 
-let totalCal og fg = calFromAlcohol og fg + calFromCarbs og fg
+let TotalCal og fg = CalFromAlcohol og fg + CalFromCarbs og fg

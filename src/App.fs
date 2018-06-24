@@ -10,9 +10,6 @@ type IJQuery =
     [<Emit("$0.click($1)")>]
     abstract OnClick : (obj -> unit) -> IJQuery
 
-    [<Emit("$1.val()")>]
-    abstract Value : (obj -> unit) -> string
-
 module JQuery =
 
   [<Emit("window['$']($0)")>]
@@ -21,28 +18,33 @@ module JQuery =
   [<Emit("$2.css($0, $1)")>]
   let css (prop: string) (value: string) (el: IJQuery) : IJQuery = jsNative
   
-  [<Emit("$1.addClass($0)")>]
-  let addClass (className: string) (el: IJQuery) : IJQuery = jsNative
-  
   [<Emit("$1.click($0)")>]
   let click (handler: obj -> unit)  (el: IJQuery) : IJQuery = jsNative
 
   [<Emit("window['$']($0)")>]
   let select (selector: string) : IJQuery = jsNative
 
-  [<Emit("$0.val()")>]
-  let value (el: IJQuery) : string = jsNative
+let calculateStandardAbv e1 e2  = 
+    Abv (TransformToDecimal e1) (TransformToDecimal e2)
+    |> RoundToPrecisonThree
+    |> TransformToString
 
-let calculateResult e1 e2  = 
-    Abv (TransformToFloat e1) (TransformToFloat e2)
+let calculateAlternateAbv e1 e2  = 
+    AlternateAbv (TransformToDecimal e1) (TransformToDecimal e2)
+    |> RoundToPrecisonThree
+    |> TransformToString
+
+let calculateTotalCalories e1 e2  = 
+    TotalCal (TransformToDecimal e1) (TransformToDecimal e2)
+    |> RoundToPrecisonTwo
     |> TransformToString
 
 let mainLoop ev =
-    let og = JQuery.select("#og").Value 
-    let fg = document.getElementById("fg").innerText
-    console.log og
-    let result = document.getElementById "standardAbv"
-    result.innerText = calculateResult fg fg
+    let og = document.getElementById("og")?value
+    let fg = document.getElementById("fg")?value
+    document.getElementById("standardAbv")?innerHTML <- calculateStandardAbv og fg
+    document.getElementById("alternateAbv")?innerHTML <- calculateAlternateAbv og fg
+    document.getElementById("totalCarbs")?innerHTML <- calculateTotalCalories og fg
     |> ignore
 
 JQuery.select("#calculate")
